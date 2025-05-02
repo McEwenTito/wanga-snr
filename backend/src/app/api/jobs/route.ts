@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 
 export async function OPTIONS() {
   const response = new NextResponse(null, { status: 204 });
@@ -17,15 +18,40 @@ export async function GET(request: Request) {
     const limit = 10;
     const skip = (page - 1) * limit;
 
+    // Get search and filter parameters
+    const search = searchParams.get('search') || '';
+    const location = searchParams.get('location') || '';
+    const sortBy = searchParams.get('sortBy') || 'postedDate';
+    const sortOrder = searchParams.get('sortOrder') || 'desc';
+
+    // Build where clause for search and filters
+    const where: Prisma.JobWhereInput = {
+      AND: [
+        search ? {
+          OR: [
+            { title: { contains: search, mode: 'insensitive' as const } },
+            { description: { contains: search, mode: 'insensitive' as const } },
+          ],
+        } : {},
+        location ? {
+          location: { contains: location, mode: 'insensitive' as const },
+        } : {},
+      ],
+    };
+
+    // Build orderBy clause
+    const orderBy: Prisma.JobOrderByWithRelationInput = {
+      [sortBy]: sortOrder,
+    };
+
     const [jobs, total] = await Promise.all([
       prisma.job.findMany({
+        where,
         skip,
         take: limit,
-        orderBy: {
-          postedDate: 'desc',
-        },
+        orderBy,
       }),
-      prisma.job.count(),
+      prisma.job.count({ where }),
     ]);
 
     const totalPages = Math.ceil(total / limit);
