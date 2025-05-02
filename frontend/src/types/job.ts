@@ -1,9 +1,9 @@
 export interface Job {
-  id: number;
+  id: string;
   title: string;
   description: string;
   location: string;
-  salary?: string;
+  salary?: number;
   postedDate: string;
 }
 

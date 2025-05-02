@@ -18,12 +18,11 @@ services:
       retries: 5
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    build: ./backend
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/jobs_db
-      NODE_ENV: production
+      NODE_ENV: development
+      PORT: 8000
     ports:
       - "8000:8000"
     depends_on:
@@ -34,9 +33,7 @@ services:
       - /app/node_modules
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    build: ./frontend
     environment:
       NEXT_PUBLIC_API_URL: http://localhost:8000
     ports:
