@@ -1,0 +1,68 @@
+# =============================
+# Global .gitignore for monorepo (frontend + backend)
+# =============================
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# ========== Dependencies ==========
+/node_modules
+/frontend/node_modules
+/backend/node_modules
+
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# ========== Testing ==========
+/coverage
+/frontend/coverage
+/backend/coverage
+
+# ========== Next.js ==========
+/.next/
+/out/
+/build
+
+/frontend/.next/
+/frontend/out/
+/frontend/build
+
+/backend/.next/
+/backend/out/
+/backend/build
+
+# ========== Environment Files ==========
+.env*
+/frontend/.env*
+/backend/.env*
+
+# ========== Vercel ==========
+.vercel
+/frontend/.vercel
+/backend/.vercel
+
+# ========== TypeScript ==========
+*.tsbuildinfo
+next-env.d.ts
+/frontend/next-env.d.ts
+/backend/next-env.d.ts
+
+# ========== Logs & Debug ==========
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-debug.log*
+
+# ========== Misc ==========
+.DS_Store
+*.pem
+
+# ========== IDE / Editor ==========
+.vscode/
+.idea/
+*.swp
