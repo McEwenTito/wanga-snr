@@ -84,12 +84,15 @@ export async function POST(request: Request) {
       );
     }
 
+    // Convert salary to integer if provided
+    const salaryInt = salary ? parseInt(salary) : null;
+
     const job = await prisma.job.create({
       data: {
         title,
         description,
         location,
-        salary,
+        salary: salaryInt,
         postedDate: new Date(),
       },
     });

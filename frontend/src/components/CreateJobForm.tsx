@@ -67,7 +67,7 @@ export default function CreateJobForm() {
         credentials: 'include',
         body: JSON.stringify({
           ...formData,
-          salary: formData.salary ? parseInt(formData.salary) : undefined,
+          salary: formData.salary ? parseInt(formData.salary) : null,
         }),
       });
 
@@ -174,9 +174,13 @@ export default function CreateJobForm() {
                     value={formData.salary}
                     onChange={handleChange}
                     min="0"
+                    step="1000"
                     className="block w-full pl-7 pr-12 rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    placeholder="0.00"
+                    placeholder="0"
                   />
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                    <span className="text-gray-500 sm:text-sm">USD</span>
+                  </div>
                 </div>
               </div>
 

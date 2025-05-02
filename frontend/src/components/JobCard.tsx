@@ -16,7 +16,7 @@ export default function JobCard({ job }: JobCardProps) {
             </h2>
             {job.salary && (
               <span className="bg-green-100 text-green-800 text-sm font-semibold px-3 py-1 rounded-full">
-                ${job.salary.toLocaleString()}
+                MK{job.salary.toLocaleString()}
               </span>
             )}
           </div>
