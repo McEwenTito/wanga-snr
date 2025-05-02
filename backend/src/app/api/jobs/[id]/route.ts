@@ -1,16 +1,22 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 
-const prisma = new PrismaClient();
+export async function OPTIONS() {
+  const response = new NextResponse(null, { status: 204 });
+  response.headers.set('Access-Control-Allow-Origin', 'http://localhost:3000');
+  response.headers.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+  response.headers.set('Access-Control-Allow-Credentials', 'true');
+  return response;
+}
 
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
-    const jobId = parseInt(params.id);
-
-    if (isNaN(jobId)) {
+    const id = parseInt(params.id);
+    if (isNaN(id)) {
       return NextResponse.json(
         { error: 'Invalid job ID' },
         { status: 400 }
@@ -18,7 +24,7 @@ export async function GET(
     }
 
     const job = await prisma.job.findUnique({
-      where: { id: jobId },
+      where: { id },
     });
 
     if (!job) {

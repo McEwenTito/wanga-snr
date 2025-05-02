@@ -1,17 +1,41 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 
-const prisma = new PrismaClient();
+export async function OPTIONS() {
+  const response = new NextResponse(null, { status: 204 });
+  response.headers.set('Access-Control-Allow-Origin', 'http://localhost:3000');
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+  response.headers.set('Access-Control-Allow-Credentials', 'true');
+  return response;
+}
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const jobs = await prisma.job.findMany({
-      orderBy: {
-        postedDate: 'desc',
-      },
-    });
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = 10;
+    const skip = (page - 1) * limit;
 
-    return NextResponse.json(jobs);
+    const [jobs, total] = await Promise.all([
+      prisma.job.findMany({
+        skip,
+        take: limit,
+        orderBy: {
+          postedDate: 'desc',
+        },
+      }),
+      prisma.job.count(),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return NextResponse.json({
+      jobs,
+      total,
+      page,
+      totalPages,
+    });
   } catch (error) {
     console.error('Error fetching jobs:', error);
     return NextResponse.json(
@@ -39,7 +63,8 @@ export async function POST(request: Request) {
         title,
         description,
         location,
-        salary: salary || '',
+        salary,
+        postedDate: new Date(),
       },
     });
 
